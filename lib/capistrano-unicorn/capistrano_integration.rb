@@ -11,7 +11,7 @@ module CapistranoUnicorn
         def remote_file_exists?(full_path)
           'true' ==  capture("if [ -e #{full_path} ]; then echo 'true'; fi").strip
         end
-        
+
         # Check if process is running
         #
         def process_exists?(pid_file)
@@ -35,11 +35,11 @@ module CapistranoUnicorn
                 run "rm #{unicorn_pid}"
               end
             end
-            
+
             config_path = "#{current_path}/config/unicorn/#{unicorn_env}.rb"
             if remote_file_exists?(config_path)
               logger.important("Starting...", "Unicorn")
-              run "cd #{current_path} && BUNDLE_GEMFILE=#{current_path}/Gemfile bundle exec unicorn_rails -c #{config_path} -E #{app_env} -D"
+              run "cd #{current_path} && bin/unicorn_rails -c #{config_path} -E #{app_env} -D"
             else
               logger.important("Config file for \"#{unicorn_env}\" environment was not found at \"#{config_path}\"", "Unicorn")
             end
@@ -84,7 +84,7 @@ module CapistranoUnicorn
               logger.important("No PIDs found. Starting Unicorn server...", "Unicorn")
               config_path = "#{current_path}/config/unicorn/#{unicorn_env}.rb"
               if remote_file_exists?(config_path)
-                run "cd #{current_path} && BUNDLE_GEMFILE=#{current_path}/Gemfile bundle exec unicorn_rails -c #{config_path} -E #{app_env} -D"
+                run "cd #{current_path} && bin/unicorn_rails -c #{config_path} -E #{app_env} -D"
               else
                 logger.important("Config file for \"#{unicorn_env}\" environment was not found at \"#{config_path}\"", "Unicorn")
               end
